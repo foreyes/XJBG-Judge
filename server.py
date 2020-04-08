@@ -65,14 +65,14 @@ def judge(task_id):
 	with open("/compile_result.txt", "rb") as f:
 		result = f.read(1)
 		if result:
-			return (998244353,"Compile Error",open("/compile_result.txt", "r").read())
+			return (None,"Compile Error", open("/compile_result.txt", "r").read())
 
 	with open("/time_result.txt", "r") as f:
 		result = f.read()
 		if not result:
-			return (998244353,"Time Limit Exceeded","")
+			return (None,"Time Limit Exceeded", "")
 		if "Segmentation fault" in result:
-			return (998244353,"Run Time Error","")
+			return (None,"Run Time Error", "")
 
 		detail = result
 		time_used = float(result.split(" seconds time elapsed")[0].split(" ")[-1])
@@ -80,14 +80,14 @@ def judge(task_id):
 	with open("/output_check.txt", "rb") as f:
 		result = f.read(1)
 		if result:
-			return (998244353,"No Output","")
+			return (None,"No Output", open("/compile_result.txt", "r").read())
 
 	with open("/answer_result.txt", "rb") as f:
 		result = f.read(1)
 		if result:
-			return (998244353,"Wrong Answer","")
+			return (None,"Wrong Answer", open("/compile_result.txt", "r").read())
 
-	return (time_used,"Accepted",detail)
+	return (time_used, "Accepted", detail)
 
 
 def judger():
