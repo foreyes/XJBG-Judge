@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0">
+	<html lang="en">
+		<head>
+			<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1">
+					<title> XJBG Judge </title>
+					
+					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.min.css">
+						</head>
+		<body>
+			<section class="section">
+				<div class="container">
+					
+					<div class="content">
+						<p>
+						<strong> Submit history of {{ username }} </strong>
+						</p>
+					</div>
+					<table class="table is-fullwidth">
+						<thead>
+							<tr>
+								<th>Status</th>
+								<th>Runtime</th>
+								<th>Detail</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for task in tasks %}
+							<tr>
+								<td>{{ task.status }}</td>
+								<td>{{ task.time }}</td>
+								<td>
+									<pre>
+										{{ task.detail }}
+									</pre>
+								</td>
+							</tr>
+							{% endfor %}
+							
+						</tbody>
+					</table>
+					
+					
+				</div>
+			</section>
+		</body>
+	</html>
+	

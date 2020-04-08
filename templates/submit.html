@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0"/>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title> XJBG Judge </title>
+		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+	</head>
+	<body>
+		<section class="section">
+			<div class="container">
+				<h1 class="title is-1">XJBG Judge</h1>
+				<div class="box">
+					<form action="/add_task" enctype="multipart/form-data" method="post">
+						<div class="field">
+							{% if no_username %}
+							<label class="label" for="username"> Username (Could not be empty) </label>
+							{% else %}
+							<label class="label" for="username"> Username </label>
+							{% endif %}
+							<input class="input" type="text" name="username"/>
+						</div>
+						<div class="field file has-name">
+							<div id="file-js-example" class="file has-name">
+								<label class="file-label">
+									<input class="file-input" type="file" name="file"/>
+									<span class="file-cta">
+										<span class="file-icon">
+											<i class="fas fa-upload"></i>
+										</span>
+										<span class="file-label">
+											Choose a file…
+										</span>
+									</span>
+									<span class="file-name">
+										No file uploaded
+									</span>
+								</label>
+							</div>
+							<script>
+								const fileInput = document.querySelector('#file-js-example input[type=file]');
+								fileInput.onchange = () => {
+									if (fileInput.files.length > 0) {
+										const fileName = document.querySelector('#file-js-example .file-name');
+										fileName.textContent = fileInput.files[0].name;
+									}
+								}
+							</script>
+							{% if no_file %}
+							<label class="label" for="file"> (File could not be empty) </label>
+							{% endif %}
+						</div>
+						<div class="field">
+							<p class="control">
+							<button type="submit" class="button is-success"> Submit </button>
+							</p>
+						</div>
+					</form>
+				</div>
+				<div class = "box">
+					<h1 class="title is-3">TODO: Ranklist</h1>
+					
+				</div>
+				<div class = "box">
+					<h1 class="title is-3">TODO: Submissions</h1>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>
+
