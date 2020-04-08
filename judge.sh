@@ -22,5 +22,6 @@ g++ main.cpp -O3 -lpthread 2> compile_result.txt
 rm -f main.cpp
 
 # test
+echo 3 > /proc/sys/vm/drop_caches
 timeout -s HUP 120 perf stat ./a.out 1> program_stdout.txt 2> time_result.txt
 cmp /projects/student/result.txt /home/testdata/1004812/answer.txt 1> answer_result.txt 2> output_check.txt
