@@ -45,9 +45,12 @@ def submit():
 
 @app.route("/user/<username>", methods = ["GET"])
 def user_history(username):
-	tasks = user_task_list[username]
-	tasks = [result_set[task_id] for task_id in tasks]
-	tasks.reverse()
+	if username not in user_task_list:
+		tasks = []
+	else:
+		tasks = user_task_list[username]
+		tasks = [result_set[task_id] for task_id in tasks]
+		tasks.reverse()
 	return flask.render_template("user_history.html", username=username, tasks=tasks)
 
 
