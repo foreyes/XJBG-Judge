@@ -80,12 +80,12 @@ def judge(task_id):
 	with open("/output_check.txt", "rb") as f:
 		result = f.read(1)
 		if result:
-			return (None,"No Output", open("/compile_result.txt", "r").read())
+			return (None,"No Output", detail)
 
 	with open("/answer_result.txt", "rb") as f:
 		result = f.read(1)
 		if result:
-			return (None,"Wrong Answer", open("/compile_result.txt", "r").read())
+			return (None,"Wrong Answer", detail)
 
 	return (time_used, "Accepted", detail)
 
