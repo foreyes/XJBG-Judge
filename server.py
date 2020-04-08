@@ -75,9 +75,7 @@ def judge(task_id):
 			return (998244353,"Run Time Error","")
 
 		detail = result
-		result = result.split("seconds")
-		time_used = float(result[0][-12: -5])
-
+		time_used = float(result.split(" seconds time elapsed")[0].split(" ")[-1])
 
 	with open("/output_check.txt", "rb") as f:
 		result = f.read(1)
