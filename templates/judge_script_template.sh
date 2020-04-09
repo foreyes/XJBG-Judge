@@ -7,7 +7,7 @@ mount -t tmpfs -o size=500m tmpfs /projects/student
 # clear data directory and fetch testdata
 cd /data
 rm -rf *
-cp /home/testdata/1004812/test_data.txt ./
+cp /home/testdata/{{ dataset }}/test_data.txt ./
 
 # clear result directory
 cd /projects/student
@@ -24,4 +24,4 @@ rm -f main.cpp
 # test
 echo 3 > /proc/sys/vm/drop_caches
 timeout -s HUP 120 perf stat ./a.out 1> program_stdout.txt 2> time_result.txt
-cmp /projects/student/result.txt /home/testdata/1004812/answer.txt 1> answer_result.txt 2> output_check.txt
+cmp /projects/student/result.txt /home/testdata/{{ dataset }}/answer.txt 1> answer_result.txt 2> output_check.txt

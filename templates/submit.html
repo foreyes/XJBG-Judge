@@ -54,6 +54,13 @@
 							{% endif %}
 						</div>
 						<div class="field">
+							<label class="label" for="dataset"> Choose dataset </label>
+							<select class="select" name="dataset">
+								<option value="355w">355w loops</option>
+								<option value="1004812">1004812 loops</option>
+							</select>
+						</div>
+						<div class="field">
 							<p class="control">
 							<button type="submit" class="button is-success"> Submit </button>
 							</p>
@@ -85,6 +92,7 @@
 						<thead>
 							<tr>
 								<th>Username</th>
+								<th>Dataset</th>
 								<th>Runtime</th>
 								<th>Status</th>
 								<th>Submit Time</th>
@@ -94,6 +102,7 @@
 							{% for submit in submissions %}
 							<tr>
 								<td>{{ submit.username }}</td>
+								<td>{{ submit.dataset }}</td>
 								<td>{{ submit.time }}</td>
 								<td>{{ submit.status }}</td>
 								<td>{{ submit.submit_time }}</td>

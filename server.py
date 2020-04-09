@@ -1,7 +1,5 @@
 import flask, os, uuid, time, threading, pickle
 
-TIME_LIMIT = 120
-
 app = flask.Flask(__name__)
 mutex = threading.Lock()
 task_queue = []
@@ -10,14 +8,23 @@ user_task_list = {}
 best_score = {}
 
 def save_data():
-	pickle.dump(best_score,open("best_score.txt","wb"))
-	pickle.dump(user_task_list,open("user_task_list.txt","wb"))
-	pickle.dump(result_set,open("result_set.txt","wb"))
+	pickle.dump(best_score, open("best_score.txt", "wb"))
+	pickle.dump(user_task_list, open("user_task_list.txt", "wb"))
+	pickle.dump(result_set, open("result_set.txt", "wb"))
+
+
 def load_data():
-	global best_score,user_task_list,result_set
-	best_score = pickle.load(open("best_score.txt","rb"))
-	user_task_list = pickle.load(open("user_task_list.txt","rb"))
-	result_set = pickle.load(open("result_set.txt","rb"))
+	global best_score, user_task_list, result_set
+	if os.path.exists("best_score.txt"):
+		best_score = pickle.load(open("best_score.txt", "rb"))
+
+	if os.path.exists("user_task_list.txt"):
+		user_task_list = pickle.load(open("user_task_list.txt", "rb"))
+
+	if os.path.exists("result_set.txt"):
+		result_set = pickle.load(open("result_set.txt", "rb"))
+
+
 @app.route("/add_task", methods= ["POST"])
 def add_task():
 	# check file exist
@@ -32,7 +39,8 @@ def add_task():
 	# get uuid and save file
 	task_id = str(uuid.uuid1())
 	file.save("pending_files/" + task_id)
-	result_set[task_id] = {"status": "Pending","submit_time":time.ctime(),"cmptime":time.time(), "time": None,"detail":"","task_id":task_id,"username" : username}
+	dataset = flask.result.form["dataset"]
+	result_set[task_id] = {"dataset": dataset, "status": "Pending", "submit_time":time.ctime(), "cmptime":time.time(), "time": None, "detail":"", "task_id":task_id, "username" : username}
 
 	# attach task to user
 	if username not in user_task_list:
@@ -58,9 +66,10 @@ def submit():
 	while len(current_bst)!=0 and current_bst[0][0] == None and current_bst[-1][0] != None:
 		current_bst.append(current_bst[0])
 		del current_bst[0]
-	submissions = sorted([result_set[i] for i in result_set],key = lambda x:x["cmptime"])
+	submissions = sorted([result_set[i] for i in result_set], key = lambda x: x["cmptime"])
 	submissions.reverse()
-	return flask.render_template("submit.html", no_file=no_file, no_username=no_username,ranklist = current_bst,submissions = submissions)
+	return flask.render_template("submit.html", no_file=no_file, no_username=no_username, ranklist = current_bst, submissions = submissions)
+
 
 @app.route("/user/<username>", methods = ["GET"])
 def user_history(username):
@@ -73,7 +82,6 @@ def user_history(username):
 	return flask.render_template("user_history.html", username=username, tasks=tasks)
 
 
-# TODO
 def init():
 	import os
 	load_data()
@@ -82,6 +90,13 @@ def init():
 
 def judge(task_id):
 	print("judging " + task_id)
+
+	# generate judge script and run it.
+	dataset = result_set[task_id]["dataset"]
+	judge_script = flask.render_template("judge_script_template.sh", dataset=dataset)
+	with open("judge.sh", "w") as f:
+		f.write(judge_script)
+
 	os.system("mv pending_files/{} /main.cpp".format(task_id))
 	os.system("./judge.sh")
 
@@ -133,7 +148,10 @@ def judger():
 		result_set[task_id]["time"] = result[0]
 		result_set[task_id]["status"] = result[1]
 		result_set[task_id]["detail"] = result[2]
+		# TODO: avoid losing running task
 		save_data()
+
+
 if __name__ == "__main__":
 	init()
 	judger_thread = threading.Thread(target=judger)
