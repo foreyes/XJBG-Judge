@@ -1,11 +1,18 @@
 import flask, os, uuid, time, threading, pickle
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = flask.Flask(__name__)
+auth = HTTPBasicAuth()
 mutex = threading.Lock()
 task_queue = []
 result_set = {}
 user_task_list = {}
 best_score = {}
+
+@auth.verify_password
+def verify_password(username, password):
+    return check_password_hash('pbkdf2:sha256:150000$90mwOZkt$34005826ad9fc2261188c69ad96b997601192d78c0fd6e2201086bde326abda3', username) and check_password_hash('pbkdf2:sha256:150000$BCUnBAOF$296875e81e0f40addb9acb96b89066b820d109042540800306ceeb90212efb29', password)
 
 def save_data():
 	pickle.dump(best_score, open("best_score.txt", "wb"))
@@ -26,6 +33,7 @@ def load_data():
 
 
 @app.route("/add_task", methods= ["POST"])
+@auth.login_required
 def add_task():
 	# check file exist
 	file = flask.request.files["file"]
@@ -56,6 +64,7 @@ def add_task():
 
 
 @app.route("/", methods = ["GET"])
+@auth.login_required
 def submit():
 	no_file = flask.request.args.get("no_file") == '1' or False
 	no_username = flask.request.args.get("no_username") == '1' or False
@@ -72,6 +81,7 @@ def submit():
 
 
 @app.route("/user/<username>", methods = ["GET"])
+@auth.login_required
 def user_history(username):
 	if username not in user_task_list:
 		tasks = []
