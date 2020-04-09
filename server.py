@@ -39,7 +39,7 @@ def add_task():
 	# get uuid and save file
 	task_id = str(uuid.uuid1())
 	file.save("pending_files/" + task_id)
-	dataset = flask.result.form["dataset"]
+	dataset = flask.request.form["dataset"]
 	result_set[task_id] = {"dataset": dataset, "status": "Pending", "submit_time":time.ctime(), "cmptime":time.time(), "time": None, "detail":"", "task_id":task_id, "username" : username}
 
 	# attach task to user
@@ -93,12 +93,8 @@ def judge(task_id):
 
 	# generate judge script and run it.
 	dataset = result_set[task_id]["dataset"]
-	judge_script = flask.render_template("judge_script_template.sh", dataset=dataset)
-	with open("judge.sh", "w") as f:
-		f.write(judge_script)
-
 	os.system("mv pending_files/{} /main.cpp".format(task_id))
-	os.system("./judge.sh")
+	os.system("./judge.sh {}".format(dataset))
 
 	with open("/compile_result.txt", "r") as f:
 		result = f.read(1)
