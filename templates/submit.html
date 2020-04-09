@@ -61,11 +61,46 @@
 					</form>
 				</div>
 				<div class = "box">
-					<h1 class="title is-3">TODO: Ranklist</h1>
-					
+					<h1 class="title is-3">Ranklist</h1>
+					<table class="table is-fullwidth">
+						<thead>
+							<tr>
+								<th>Username</th>
+								<th>Runtime</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for user in ranklist %}
+							<tr>
+								<td>{{ user[1] }}</td>
+								<td>{{ user[0] }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 				</div>
 				<div class = "box">
-					<h1 class="title is-3">TODO: Submissions</h1>
+					<h1 class="title is-3">Submissions</h1>
+					<table class="table is-fullwidth">
+						<thead>
+							<tr>
+								<th>Username</th>
+								<th>Runtime</th>
+								<th>Status</th>
+								<th>Submit Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for submit in submissions %}
+							<tr>
+								<td>{{ submit.username }}</td>
+								<td>{{ submit.time }}</td>
+								<td>{{ submit.status }}</td>
+								<td>{{ submit.submit_time }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</section>
