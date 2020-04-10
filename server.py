@@ -2,6 +2,8 @@ import flask, os, uuid, time, threading, pickle
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
+supported_datasets = ["3512444", "1004812", "2896262", "2861665", "2886182(K_14)"]
+
 app = flask.Flask(__name__)
 auth = HTTPBasicAuth()
 mutex = threading.Lock()
@@ -68,7 +70,9 @@ def add_task():
 def submit():
 	no_file = flask.request.args.get("no_file") == '1' or False
 	no_username = flask.request.args.get("no_username") == '1' or False
-	show_all_submissions = flask.request.args.get("show_all_submissions") == '1' or False
+	# display the ranklist of the first dataset by default
+	ranklist_dataset = flask.request.args.get("ranklist_dataset") or supported_datasets[0]
+
 	current_bst = []
 	for i in best_score:
 		current_bst.append((best_score[i],i))
@@ -78,9 +82,15 @@ def submit():
 		del current_bst[0]
 	submissions = sorted([result_set[i] for i in result_set], key = lambda x: x["cmptime"])
 	submissions.reverse()
-	if not show_all_submissions:
-		if len(submissions) > 10: submissions = submissions[0: 10]
-	return flask.render_template("submit.html", no_file=no_file, no_username=no_username, ranklist = current_bst, submissions = submissions)
+
+	# display the first submission page by default
+	SUBMISSIONS_PER_PAGE = 10
+	submission_page = int(flask.request.args.get("page") or "0")
+	begin = submission_page * SUBMISSIONS_PER_PAGE
+	end = min(begin + SUBMISSIONS_PER_PAGE, len(submissions))
+	submissions = submissions[begin: end]
+
+	return flask.render_template("submit.html", supported_datasets=supported_datasets, no_file=no_file, no_username=no_username, ranklist = current_bst, submissions = submissions)
 
 
 @app.route("/user/<username>", methods = ["GET"])

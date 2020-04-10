@@ -56,11 +56,9 @@
 						<div class="field">
 							<label class="label" for="dataset"> Choose dataset </label>
 							<select class="select" name="dataset">
-								<option value="3512444">3512444</option>
-								<option value="1004812">1004812</option>
-								<option value="2896262">2896262</option>
-								<option value="2861665">2861665</option>
-								<option value="2886182">2886182(K_14)</option>
+								{% for dataset in supported_datasets %}
+								<option>{{ dataset }}</option>
+								{% endfor %}
 							</select>
 						</div>
 						<div class="field">
