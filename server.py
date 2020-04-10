@@ -68,6 +68,7 @@ def add_task():
 def submit():
 	no_file = flask.request.args.get("no_file") == '1' or False
 	no_username = flask.request.args.get("no_username") == '1' or False
+	show_all_submissions = flask.request.args.get("show_all_submissions") == '1' or False
 	current_bst = []
 	for i in best_score:
 		current_bst.append((best_score[i],i))
@@ -77,6 +78,8 @@ def submit():
 		del current_bst[0]
 	submissions = sorted([result_set[i] for i in result_set], key = lambda x: x["cmptime"])
 	submissions.reverse()
+	if not show_all_submissions:
+		if len(submissions) > 10: submissions = submissions[0: 10]
 	return flask.render_template("submit.html", no_file=no_file, no_username=no_username, ranklist = current_bst, submissions = submissions)
 
 
@@ -89,6 +92,8 @@ def user_history(username):
 		tasks = user_task_list[username]
 		tasks = [result_set[task_id] for task_id in tasks]
 		tasks.reverse()
+		if len(tasks) > 10:
+ 			tasks = tasks[0: 10]
 	return flask.render_template("user_history.html", username=username, tasks=tasks)
 
 
