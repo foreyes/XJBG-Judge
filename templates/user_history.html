@@ -20,6 +20,7 @@
 					<table class="table is-fullwidth">
 						<thead>
 							<tr>
+								<th>Dataset</th>
 								<th>Status</th>
 								<th>Runtime</th>
 								<th>Detail</th>
@@ -28,6 +29,7 @@
 						<tbody>
 							{% for task in tasks %}
 							<tr>
+								<td>{{ task.dataset }}</td>
 								<td>{{ task.status }}</td>
 								<td>{{ task.time }}</td>
 								<td>

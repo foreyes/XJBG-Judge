@@ -70,6 +70,19 @@
 				</div>
 				<div class = "box">
 					<h1 class="title is-3">Ranklist</h1>
+					<nav>
+						<div class="tabs">
+							<ul>
+								{% for dataset in supported_datasets %}
+								{% if ranklist_dataset == dataset %}
+								<li class="is-active"><a href="/?ranklist_dataset={{ dataset }}">{{ dataset }}</a></li>
+								{% else %}
+								<li><a href="/?ranklist_dataset={{ dataset }}">{{ dataset }}</a></li>
+								{% endif %}
+								{% endfor %}
+							</ul>
+						</div>
+					</nav>
 					<table class="table is-fullwidth">
 						<thead>
 							<tr>
@@ -111,19 +124,23 @@
 							{% endfor %}
 						</tbody>
 					</table>
-					{% if submission_page > 0 %}
-					<a class="button is-rounded is-success" href="/?page={{ submission_page - 1 }}">Prev page</a>
-					{% else %}
-					<button class="button is-rounded" disabled>Prev page</button>
-					{% endif %}
+					<div class="level-item ">
+						{% if submission_page > 0 %}
+						<a class="button is-rounded is-success" href="/?page={{ submission_page - 1 }}">Prev page</a>
+						{% else %}
+						<button class="button is-rounded" disabled>Prev page</button>
+						{% endif %}
 
-					<span class="content is-medium"> {{ submission_page + 1 }} / {{ total_pages + 1 }} </span>
+						<span>
+							<label class="label has-text-center"> {{ submission_page + 1 }} / {{ total_pages + 1 }} </label>
+						</span>
 
-					{% if submission_page < total_pages %}
-					<a class="button is-rounded is-success" href="/?page={{ submission_page + 1 }}">Next page</a>
-					{% else %}
-					<button class="button is-rounded" disabled>Next page</button>
-					{% endif %}
+						{% if submission_page < total_pages %}
+						<a class="button is-rounded is-success" href="/?page={{ submission_page + 1 }}">Next page</a>
+						{% else %}
+						<button class="button is-rounded" disabled>Next page</button>
+						{% endif %}
+					</div>
 				</div>
 			</div>
 		</section>

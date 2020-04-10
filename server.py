@@ -73,13 +73,20 @@ def submit():
 	# display the ranklist of the first dataset by default
 	ranklist_dataset = flask.request.args.get("ranklist_dataset") or supported_datasets[0]
 
-	current_bst = []
-	for i in best_score:
-		current_bst.append((best_score[i],i))
-	current_bst = sorted(current_bst)
-	while len(current_bst)!=0 and current_bst[0][0] == None and current_bst[-1][0] != None:
-		current_bst.append(current_bst[0])
-		del current_bst[0]
+	# current_bst = []
+	# for i in best_score:
+	# 	current_bst.append((best_score[i],i))
+	# current_bst = sorted(current_bst)
+	# while len(current_bst)!=0 and current_bst[0][0] == None and current_bst[-1][0] != None:
+	# 	current_bst.append(current_bst[0])
+	# 	del current_bst[0]
+
+	from itertools import groupby
+	ranklist = [result for result in result_set if result["dataset"] == ranklist_dataset]
+	ranklist = groupby(ranklist, key = lambda x: x["username"])
+	ranklist = [(username, min(group, key = lambda x: x["cmptime"])["cmptime"]) for username, group in ranklist]
+	ranklist = sorted(ranklist, key = lambda x: x[1])
+
 	submissions = sorted([result_set[i] for i in result_set], key = lambda x: x["cmptime"])
 	submissions.reverse()
 
@@ -92,7 +99,7 @@ def submit():
 	end = min(begin + SUBMISSIONS_PER_PAGE, len(submissions))
 	submissions = submissions[begin: end]
 
-	return flask.render_template("submit.html", supported_datasets=supported_datasets, no_file=no_file, no_username=no_username, ranklist = current_bst, submissions = submissions, submission_page=submission_page, total_pages=total_pages)
+	return flask.render_template("submit.html", supported_datasets=supported_datasets, no_file=no_file, no_username=no_username, ranklist = ranklist, submissions = submissions, submission_page=submission_page, total_pages=total_pages, ranklist_dataset=ranklist_dataset)
 
 
 @app.route("/user/<username>", methods = ["GET"])
