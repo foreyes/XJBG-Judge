@@ -111,6 +111,19 @@
 							{% endfor %}
 						</tbody>
 					</table>
+					{% if submission_page > 0 %}
+					<a class="button is-rounded is-success" href="/?page={{ submission_page - 1 }}">Prev page</a>
+					{% else %}
+					<button class="button is-rounded" disabled>Prev page</button>
+					{% endif %}
+
+					<span class="content is-medium"> {{ submission_page + 1 }} / {{ total_pages + 1 }} </span>
+
+					{% if submission_page < total_pages %}
+					<a class="button is-rounded is-success" href="/?page={{ submission_page + 1 }}">Next page</a>
+					{% else %}
+					<button class="button is-rounded" disabled>Next page</button>
+					{% endif %}
 				</div>
 			</div>
 		</section>

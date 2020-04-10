@@ -85,12 +85,14 @@ def submit():
 
 	# display the first submission page by default
 	SUBMISSIONS_PER_PAGE = 10
+	# submission_page and total_page count from 0
 	submission_page = int(flask.request.args.get("page") or "0")
+	total_pages = (len(submissions) + SUBMISSIONS_PER_PAGE - 1) // SUBMISSIONS_PER_PAGE
 	begin = submission_page * SUBMISSIONS_PER_PAGE
 	end = min(begin + SUBMISSIONS_PER_PAGE, len(submissions))
 	submissions = submissions[begin: end]
 
-	return flask.render_template("submit.html", supported_datasets=supported_datasets, no_file=no_file, no_username=no_username, ranklist = current_bst, submissions = submissions)
+	return flask.render_template("submit.html", supported_datasets=supported_datasets, no_file=no_file, no_username=no_username, ranklist = current_bst, submissions = submissions, submission_page=submission_page, total_pages=total_pages)
 
 
 @app.route("/user/<username>", methods = ["GET"])
