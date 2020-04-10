@@ -82,9 +82,10 @@ def submit():
 	# 	del current_bst[0]
 
 	from itertools import groupby
-	ranklist = [result for result in result_set if result["dataset"] == ranklist_dataset]
+	ranklist = [result_set[i] for i in result_set if "dataset" in result_set[i] and result_set[i]["dataset"] == ranklist_dataset]
+	ranklist = sorted(ranklist, key = lambda x: x["username"])
 	ranklist = groupby(ranklist, key = lambda x: x["username"])
-	ranklist = [(username, min(group, key = lambda x: x["cmptime"])["cmptime"]) for username, group in ranklist]
+	ranklist = [(username, min(group, key = lambda x: x["time"])["time"]) for username, group in ranklist]
 	ranklist = sorted(ranklist, key = lambda x: x[1])
 
 	submissions = sorted([result_set[i] for i in result_set], key = lambda x: x["cmptime"])
